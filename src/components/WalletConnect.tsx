@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ProfilePanel from "./ProfilePanel";
 
 declare global {
   interface Window { ethereum?: { request: (args: { method: string }) => Promise<string[]> } }
@@ -30,6 +31,7 @@ export default function WalletConnect() {
       <button className="btn" onClick={() => (addr ? setAddr("") : setOpen(true))}>
         {addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "CONNECT WALLET"}
       </button>
+      {addr && <ProfilePanel address={addr} onDisconnect={() => setAddr("")} />}
       {open && (
         <div id="modal" className="on" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
           <div className="box">
