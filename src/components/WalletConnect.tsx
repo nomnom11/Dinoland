@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ProfilePanel from "./ProfilePanel";
 
 declare global {
   interface Window { ethereum?: { request: (args: { method: string }) => Promise<string[]> } }
@@ -8,6 +9,7 @@ const WALLETS = ["MetaMask", "WalletConnect", "Coinbase Wallet", "Trust Wallet"]
 
 export default function WalletConnect() {
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [addr, setAddr] = useState("");
   const [msg, setMsg] = useState("");
 
@@ -19,7 +21,11 @@ export default function WalletConnect() {
         return;
       }
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      if (accounts[0]) { setAddr(accounts[0]); setOpen(false); }
+      if (accounts[0]) {
+        setAddr(accounts[0]);
+        setProfileOpen(true);
+        setOpen(false);
+      }
     } catch {
       setMsg("Connection was cancelled.");
     }
@@ -27,9 +33,18 @@ export default function WalletConnect() {
 
   return (
     <>
-      <button className="btn" onClick={() => (addr ? setAddr("") : setOpen(true))}>
-        {addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "CONNECT WALLET"}
+      <button className="btn" onClick={() => (addr ? setProfileOpen((current) => !current) : setOpen(true))}>
+        {addr ? (profileOpen ? "HIDE PROFILE" : "VIEW PROFILE") : "CONNECT WALLET"}
       </button>
+      {addr && profileOpen && (
+        <ProfilePanel
+          address={addr}
+          onDisconnect={() => {
+            setAddr("");
+            setProfileOpen(false);
+          }}
+        />
+      )}
       {open && (
         <div id="modal" className="on" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
           <div className="box">
