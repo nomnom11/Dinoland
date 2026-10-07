@@ -10,6 +10,9 @@ const description = "DinoLand is a pixel-art prehistoric adventure universe. Exp
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
+  other: {
+    "virtual-protocol-site-verification": "d1e744da58dc5e5d841f1a74c7a7b079",
+  },
   title: "DinoLand — Enter the Pixel Jurassic",
   description,
   keywords: ["DinoLand", "$DINO", "pixel art", "crypto game", "web3 game", "dinosaur"],
